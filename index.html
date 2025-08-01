@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Galaxy of the Universe</title>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+      font-family: 'Orbitron', sans-serif;
+      background: radial-gradient(ellipse at center, #000000 0%, #0d0d0d 100%);
+    }
+
+    .universe {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      background: url('https://images.unsplash.com/photo-1581323377499-ae49f94f74f1?ixlib=rb-4.0.3&auto=format&fit=crop&w=1950&q=80') no-repeat center center;
+      background-size: cover;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+    }
+
+    #starfield {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      z-index: 1;
+    }
+
+    .galaxy-center {
+      width: 350px;
+      height: 350px;
+      background: radial-gradient(circle, rgba(0,153,255,0.6) 0%, rgba(0,0,0,0) 70%);
+      border-radius: 50%;
+      position: absolute;
+      z-index: 2;
+      animation: pulse 5s infinite;
+    }
+
+    .title {
+      position: relative;
+      z-index: 3;
+      color: #ffffff;
+      font-size: 3em;
+      text-shadow: 0 0 15px #00aaff, 0 0 30px #0077ff;
+      margin-top: 20px;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.7;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 1;
+      }
+    }
+
+    /* FACT SLIDER STYLES */
+    .fact-slider {
+      position: absolute;
+      padding: 15px 30px;
+      background-color: rgba(255, 0, 0, 0.9);
+      color: white;
+      font-size: 1.3em;
+      font-weight: bold;
+      z-index: 5;
+      white-space: nowrap;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.6);
+      opacity: 0;
+    }
+
+    /* Animation directions */
+    .slide-in-top {
+      animation: slideInTop 1s forwards, slideOutTop 1s 4s forwards;
+      top: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .slide-in-bottom {
+      animation: slideInBottom 1s forwards, slideOutBottom 1s 4s forwards;
+      bottom: -100px;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .slide-in-left {
+      animation: slideInLeft 1s forwards, slideOutLeft 1s 4s forwards;
+      left: -100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    .slide-in-right {
+      animation: slideInRight 1s forwards, slideOutRight 1s 4s forwards;
+      right: -100%;
+      top: 50%;
+      transform: translateY(-50%);
+    }
+
+    @keyframes slideInTop {
+      to { top: 50px; opacity: 1; }
+    }
+    @keyframes slideOutTop {
+      to { top: -100px; opacity: 0; }
+    }
+
+    @keyframes slideInBottom {
+      to { bottom: 50px; opacity: 1; }
+    }
+    @keyframes slideOutBottom {
+      to { bottom: -100px; opacity: 0; }
+    }
+
+    @keyframes slideInLeft {
+      to { left: 50px; opacity: 1; }
+    }
+    @keyframes slideOutLeft {
+      to { left: -100%; opacity: 0; }
+    }
+
+    @keyframes slideInRight {
+      to { right: 50px; opacity: 1; }
+    }
+    @keyframes slideOutRight {
+      to { right: -100%; opacity: 0; }
+    }
+  </style>
+</head>
+<body>
+  <div class="universe">
+    <canvas id="starfield"></canvas>
+    <div class="galaxy-center"></div>
+    <h1 class="title">Galaxy of the Universe</h1>
+    <div id="fact" class="fact-slider"></div>
+  </div>
+
+  <script>
+    // Starfield animation
+    const canvas = document.getElementById('starfield');
+    const ctx = canvas.getContext('2d');
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    let stars = [];
+    for (let i = 0; i < 300; i++) {
+      stars.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        r: Math.random() * 1.5,
+        d: Math.random() * 0.5 + 0.3
+      });
+    }
+
+    function drawStars() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      ctx.fillStyle = '#ffffff';
+      ctx.shadowBlur = 5;
+      ctx.shadowColor = '#ffffff';
+      stars.forEach(star => {
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.r, 0, Math.PI * 2, false);
+        ctx.fill();
+        star.y += star.d;
+        if (star.y > canvas.height) {
+          star.y = 0;
+          star.x = Math.random() * canvas.width;
+        }
+      });
+      requestAnimationFrame(drawStars);
+    }
+    drawStars();
+
+    // Galaxy facts
+    const facts = [
+      "The Milky Way galaxy is over 100,000 light-years wide.",
+      "There are more stars in the universe than grains of sand on Earth.",
+      "Neutron stars can spin 600 times per second.",
+      "Black holes exist at the center of most galaxies.",
+      "Andromeda and the Milky Way are on a collision course.",
+      "There are an estimated 2 trillion galaxies in the observable universe.",
+      "Some stars explode in supernovas, creating new elements.",
+      "A light-year is about 9.5 trillion kilometers.",
+      "The Sun is a G-type main-sequence star (G dwarf).",
+      "Quasars are brighter than entire galaxies."
+    ];
+
+    const directions = ["slide-in-top", "slide-in-bottom", "slide-in-left", "slide-in-right"];
+    let factIndex = 0;
+    let directionIndex = 0;
+    const factBox = document.getElementById("fact");
+
+    function showNextFact() {
+      factBox.innerText = facts[factIndex];
+      factBox.className = "fact-slider " + directions[directionIndex];
+
+      // Prepare for next cycle
+      factIndex = (factIndex + 1) % facts.length;
+      directionIndex = (directionIndex + 1) % directions.length;
+
+      // Clear classes after animations to reset
+      setTimeout(() => {
+        factBox.className = "fact-slider";
+      }, 5000); // Wait for in+out animations
+    }
+
+    showNextFact();
+    setInterval(showNextFact, 6000); // Run every 6s (1s in + 4s stay + 1s out)
+  </script>
+</body>
+</html>
